@@ -1,27 +1,23 @@
 package com.worldline.interview;
 
 public class InternalCombustionEngine implements Engine {
-
     private boolean running;
     private int fuelLevel;
-    private final FuelType requiredFuelType;
+    private FuelType requiredFuelType;
     private FuelType fuelType;
 
     public InternalCombustionEngine(FuelType requiredFuelType) {
-        if (requiredFuelType != FuelType.PETROL && requiredFuelType != FuelType.DIESEL) {
-            throw new IllegalArgumentException("InternalCombustionEngine only accepts PETROL or DIESEL.");
-        }
         this.requiredFuelType = requiredFuelType;
-        running = false;
-        fuelLevel = 0;
+        this.running = false;
+        this.fuelLevel = 0;
     }
 
     @Override
     public void start() {
-        if (fuelLevel > 0 && requiredFuelType.equals(fuelType)) {
+        if (fuelLevel > 0 && requiredFuelType == fuelType) {
             running = true;
         } else {
-            throw new IllegalStateException("Not able to start engine.");
+            throw new IllegalStateException("Cannot start InternalCombustionEngine without fuel or with incorrect fuel type.");
         }
     }
 
@@ -37,17 +33,8 @@ public class InternalCombustionEngine implements Engine {
 
     @Override
     public void fill(FuelType fuelType, int fuelLevel) {
-        if (fuelLevel >= 0 && fuelLevel <= 100) {
-            this.fuelLevel = fuelLevel;
-        }
-        else if (fuelLevel > 100) {
-            this.fuelLevel = 100;
-        }
-        else {
-            this.fuelLevel = 0;
-        }
-
         this.fuelType = fuelType;
+        this.fuelLevel = Math.max(0, Math.min(fuelLevel, 100));
     }
 
     @Override
